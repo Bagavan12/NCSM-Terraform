@@ -166,3 +166,21 @@ moved {
   from = azurerm_role_assignment.terraform_kv_secrets_officer
   to   = azurerm_role_assignment.terraform_kv_secrets_officer["43168f21-3466-47a8-aad6-c03d7fbefffd"]
 }
+
+# The old Contributor grants can't be deleted: Azure Backup puts a
+# CanNotDelete lock (AzureBackupLock-DoNotDelete) on the protected storage
+# account, which also blocks deleting role assignments scoped to it. Stop
+# managing them instead; Owner (above) is a superset, so they're harmless.
+removed {
+  from = azurerm_role_assignment.web_blob_data_contributor
+  lifecycle {
+    destroy = false
+  }
+}
+
+removed {
+  from = azurerm_role_assignment.worker_blob_data_contributor
+  lifecycle {
+    destroy = false
+  }
+}
